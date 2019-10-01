@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
   // broadcast arp request (which mac has target_ip?)
   MAC broadcast;
   memset(&broadcast, '\xFF', 6);
-  send_arp(my_mac, my_ip, broadcast, sender_ip, ARPOP_REQUEST);
+  send_arp(dev, my_mac, my_ip, broadcast, sender_ip, ARPOP_REQUEST);
   printf("send broadcast ARP request\n");
 
   // wait for the response
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
   print_MAC("sender MAC", sender_mac);
 
   // send arp
-  send_arp(my_mac, target_ip, sender_mac, sender_ip, ARPOP_REQUEST);
+  send_arp(dev, my_mac, target_ip, sender_mac, sender_ip, ARPOP_REQUEST);
   printf("ARP request sent\n");
 
   pcap_close(handle);

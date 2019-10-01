@@ -49,7 +49,7 @@ typedef struct _tcp_header{
 	uint16_t urg_ptr;
 } TCP_header;
 
-int send_arp(MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_ip, int op);
+int send_arp(const char * dev, MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_ip, int op);
 void print_MAC(const char* label, MAC mac);
 void print_IP(const char* label, uint32_t ip);
 void str_to_ip(char* ip_str, uint32_t* out);

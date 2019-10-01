@@ -7,8 +7,8 @@
 #include <netinet/ether.h>
 #include "pcap_handle.h"
 
-int send_arp(MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_ip, int op){
-	
+int send_arp(const char * dev, MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_ip, int op){
+
 	// make ARP packet
 	u_char* packet = (u_char*)malloc(0xC + 0x24);
 
@@ -37,8 +37,11 @@ int send_arp(MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_ip, int op){
 	memcpy(packet, &eth, 0xC);
 	memcpy(packet + 0xC, &arp, 0x24);
 
-	// send packet
-
+	// send packet (https://blog.pages.kr/290)
+	char errbuf[PCAP_ERRBUF_SIZE];
+	pcap_t *fp;
+	fp = pcap_open_live(dev, 65536, 0, 1000, errbuf);
+	pcap_sendpacket(fp, packet, 0xC + 0x24);
 
 	return 0;
 }
