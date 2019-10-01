@@ -12,6 +12,7 @@ typedef struct _eth_header{
 	uint16_t ether_type;	
 } Eth_header;
 
+#pragma pack(1)
 typedef struct _arp_headdrer{
 	uint16_t hardware_type;
 	uint16_t protocol_type;
