@@ -54,11 +54,11 @@ int main(int argc, char* argv[]) {
     int res = pcap_next_ex(handle, &header, &packet);
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
-    
+  
     if(ntohs(((Eth_header*)packet)->ether_type) != ETHERTYPE_ARP) continue;
-    arp_pkt = (ARP_header*)packet + 0xC;
+    arp_pkt = (ARP_header*)(packet + 0xE);
 
-    if(arp_pkt->sender_addr == sender_ip && arp_pkt->opcode == ARPOP_REPLY) break;
+    if(ntohl(arp_pkt->sender_addr) == sender_ip && ntohs(arp_pkt->opcode) == ARPOP_REPLY) break;
   }
   MAC sender_mac;
   memcpy(&sender_mac, &(arp_pkt->sender_mac), 6);
@@ -67,8 +67,8 @@ int main(int argc, char* argv[]) {
   print_MAC("sender MAC", sender_mac);
 
   // send arp
-  send_arp(dev, my_mac, target_ip, sender_mac, sender_ip, ARPOP_REQUEST);
-  printf("ARP request sent\n");
+  send_arp(dev, my_mac, target_ip, sender_mac, sender_ip, ARPOP_REPLY);
+  printf("ARP reply sent\n");
 
   pcap_close(handle);
   return 0;

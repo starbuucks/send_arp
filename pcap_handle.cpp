@@ -22,7 +22,7 @@ int send_arp(const char * dev, MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_i
 	// build ARP header
 	ARP_header arp;
 	arp.hardware_type = htons(1);
-	arp.protocol_type = htons(0x8000);
+	arp.protocol_type = htons(0x0800);
 	arp.hw_addr_len = 6;
 	arp.protocol_addr_len = 4;
 	arp.opcode = htons(op);
@@ -37,24 +37,18 @@ int send_arp(const char * dev, MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_i
 	// copy headers to the packet
 	memcpy(packet, &eth, sizeof(Eth_header));
 	memcpy(packet + sizeof(Eth_header), &arp, sizeof(ARP_header));
-	int i;
-
-	for (i=0; i<packet_len; i++){
-		if(i%8 == 0) printf("\n");
-		printf("%02x ", packet[i]);
-	}
 
 	// send packet (https://blog.pages.kr/290)
 	char errbuf[PCAP_ERRBUF_SIZE];
 	pcap_t *fp;
 	fp = pcap_open_live(dev, 65536, 0, 1000, errbuf);
-	pcap_sendpacket(fp, packet, packet_len);
+	int e=pcap_sendpacket(fp, packet, packet_len);
 
 	return 0;
 }
 
 void print_MAC(const char* label, MAC mac){
-	printf("%s : %02x:%02x:%02x:%02x:%02x:%02x\n", label,
+	printf("%s : %02X:%02X:%02X:%02X:%02X:%02X\n", label,
 		mac.i[0], mac.i[1], mac.i[2], mac.i[3], mac.i[4], mac.i[5]);
 }
 
