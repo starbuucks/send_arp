@@ -27,12 +27,12 @@ int send_arp(const char * dev, MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_i
 	arp.protocol_addr_len = 4;
 	arp.opcode = htons(op);
 	memcpy(&(arp.sender_mac), &s_mac, 6);
-	arp.sender_addr = s_ip;
+	arp.sender_addr = htonl(s_ip);
 	if(op == ARPOP_REQUEST)
 		memset(&(arp.target_mac), 0, 6);
 	else
 		memcpy(&(arp.target_mac), &t_mac, 6);
-	arp.target_addr = t_ip;
+	arp.target_addr = htonl(t_ip);
 
 	// copy headers to the packet
 	memcpy(packet, &eth, sizeof(Eth_header));
@@ -71,10 +71,10 @@ void str_to_ip(char* ip_str, uint32_t* out){
 	int j = -1;
 	uint8_t ip_arr[4];
 	for(i = 0; i < 4; i++){
-		st = j + 1;
-		for(j = i; ip_str[j] != '.' && ip_str[j] != '\x00'; j++);
+		st = ++j;
+		for(; ip_str[j] != '.' && ip_str[j] != '\x00'; j++);
 		ip_str[j] = '\x00';
-		ip_arr[i] = atoi(ip_str + st);
+		ip_arr[3 - i] = atoi(ip_str + st);
 	}
 	memcpy(out, ip_arr, 4);
 }
