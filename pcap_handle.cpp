@@ -20,8 +20,8 @@ int send_arp(MAC s_mac, uint32_t s_ip, MAC t_mac, uint32_t t_ip, int op){
 
 	// build ARP header
 	ARP_header arp;
-	arp.hardware_type = -1;
-	arp.protocol_type = -1;
+	arp.hardware_type = 1;
+	arp.protocol_type = htons(0x8000);
 	arp.hw_addr_len = 6;
 	arp.protocol_addr_len = 4;
 	arp.opcode = op;

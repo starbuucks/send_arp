@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     if (res == 0) continue;
     if (res == -1 || res == -2) break;
     
-    if(((Eth_header*)packet)->ether_type != ETHERTYPE_ARP) continue;
+    if(ntohs(((Eth_header*)packet)->ether_type) != ETHERTYPE_ARP) continue;
     arp_pkt = (ARP_header*)packet + 0xC;
 
     if(arp_pkt->sender_addr == sender_ip && arp_pkt->opcode == ARPOP_REPLY) break;
